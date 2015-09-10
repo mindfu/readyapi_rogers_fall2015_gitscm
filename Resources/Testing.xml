@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testSuite id="7cd969a6-9bd7-4336-bf63-53e841063d61" name="Testing" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="7cd969a6-9bd7-4336-bf63-53e841063d61fileName">Testing</con:setting></con:settings><con:savedRecentRuns>1</con:savedRecentRuns><con:runType>SEQUENTIAL</con:runType><con:properties/><con:reportParameters/><con:testCase id="7557f3e1-780a-4b39-b225-5acfe3bb3b81" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="getUser" searchProperties="true"><con:settings><con:setting id="7557f3e1-780a-4b39-b225-5acfe3bb3b81fileName">getUser</con:setting></con:settings><con:savedRecentRuns>1</con:savedRecentRuns><con:testStep type="restrequest" name="SystemApplications" id="dbfc47b8-0c1d-4b54-947f-3fec2c977d18"><con:settings/><con:config service="First Attempt" resourcePath="/platform/rest/v37/system/applications" methodName="Method 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="SystemApplications" id="5f9ed10a-bfde-456e-b2f4-86ee171b2469" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="CAMP-SESSION" value="${CampID}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://eclipselab1.vf.rogers.com</con:endpoint><con:request/><con:originalUri>http://eclipselab1.vf.rogers.com/platform/rest/v37/system/applications</con:originalUri><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:parameters>
+  <con:entry key="CAMP-SESSION" value="${CampID}"/>
+  <con:entry key="Cookie" value="${SessionID}"/>
+  <con:entry key="X-DEBUG-HHID" value="THS3_HHID4_RegionA"/>
+  <con:entry key="X-W3-DEVICE-ID" value="aa915bff9a6751d1d2a4aef91d5aa35a255ab261"/>
+  <con:entry key="Accept" value="*/*"/>
+  <con:entry key="User-Agent" value="Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.132 Safari/537.36"/>
+  <con:entry key="Connection" value="keep-alive"/>
+  <con:entry key="Referer" value="http://eclipselab1.vf.rogers.com/eclipseDigiflare/dev/index.html"/>
+  <con:entry key="Host" value="eclipselab1.vf.rogers.com"/>
+  <con:entry key="Accept-Language" value="en-US,en;q=0.8,pl;q=0.6"/>
+  <con:entry key="Accept-Encoding" value="gzip, deflate, sdch"/>
+  <con:entry key="Content-Type" value="application/json; charset=utf-8"/>
+</con:parameters><con:parameterOrder><con:entry>Accept-Language</con:entry><con:entry>Accept-Encoding</con:entry><con:entry>Host</con:entry><con:entry>Accept</con:entry><con:entry>User-Agent</con:entry><con:entry>Connection</con:entry><con:entry>Referer</con:entry><con:entry>CAMP-SESSION</con:entry><con:entry>Cookie</con:entry><con:entry>Content-Type</con:entry><con:entry>X-W3-DEVICE-ID</con:entry><con:entry>X-DEBUG-HHID</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="groovy" name="JS Get JSON" id="8879056f-5d83-4738-8f3b-51c35749bcf2"><con:settings/><con:config><script>//var response = testRunner.getTestCase().getTestStepByName("GetSession").httpRequest.response.responseHeaders;
+var responseContent = testRunner.testCase.getTestStepByName("SystemApplications").httpRequest.response; 
+//var fullstring = responseContent.toString();
+var JSONresponse = responseContent.getContentAsString();
+
+    // Parse the JSON doc
+    var json = JSON.parse(JSONresponse);
+    //jsonVar2 = JSON.stringify(JSONresponse, replacer());
+
+    // Get the bits we need
+    //var url = jsonVar["url"];
+
+//log.info(jsonResponse);
+
+//var response = testRunner.getTestCase().getTestStepByName("GetSession").httpRequest.response.responseHeaders;
+var responseContent = testRunner.testCase.getTestStepByName("SystemApplications").httpRequest.response; 
+//var fullstring = responseContent.toString();
+var JSONresponse = responseContent.getContentAsString();
+//var JSONresponse = responseContent.toString();
+
+    // Parse the JSON doc
+    var json = JSON.parse(JSONresponse);
+    //var json = (eval("(" + JSONresponse + ")"));
+    //jsonVar2 = JSON.stringify(JSONresponse, replacer());
+
+    var videosVersion = json[0].attributes["rest.api.url.fragment"]; 
+    var platformVersion = json[1].attributes["plugin.social.rest.api.url.fragment"]; 
+    
+    context.setProperty("vVersion", videosVersion);
+    context.setProperty("pVersion", platformVersion);
+    
+    //log.info(json[1].attributes["rest.api.url.fragment"]);
+    /*for (var i = 0; i &lt; json.length; i++) {
+      for (var prop in json[i]) {
+         if (json[i].hasOwnProperty(prop)) {
+            //if (json[i][prop]==="attibutes["rest.api.url.fragment"]") {
+            if (typeof(json[i][prop]) === 'object') { log.info["object"]; }
+            	//log.info[json[i][prop]];
+            };
+         }
+       }*/
+
+///http://www.quora.com/How-do-you-loop-through-a-complex-JSON-tree-of-objects-and-arrays-in-JavaScript
+
+
+/*
+function traverse(x, level) {
+  if (isArray(x)) {
+    traverseArray(x, level);
+  } else if ((typeof x === 'object') &amp;&amp; (x !== null)) {
+    traverseObject(x, level);
+  } else {
+  	//if (x.indexOf('rest/v')>= 0) {  log.info("Level " + level + " Version " + x.replace("rest/v","")); } else {
+  	if (x.indexOf('rest/v')>= 0) {  
+  		//if (!x.indexOf("social")){ } else {
+  		//log.info("Version " + x.replace("rest/v","")); 
+  		//}
+  		//log.info("Version " + x.replace("rest/v","")); 
+  		log.info("Version: " + x); 
+  	} else {
+    //log.info(level + x); 
+    }
+  }
+}
+
+function isArray(o) {
+  return Object.prototype.toString.call(o) === '[object Array]';
+}
+
+function traverseArray(arr, level) {
+  //log.info(level + "&lt;array>");
+  arr.forEach(function(x) {
+    traverse(x, level + "  ");
+  });
+}
+function traverseObject(obj, level) {
+  //log.info(level + "&lt;object>");
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      //log.info(level + "  " + key + ":");
+      //if (key === "rest.api.url.fragment") {log.info("rest object rest object rest object ");}
+      traverse(obj[key], level + "    "); 
+    }
+  }
+}
+
+traverse (json,3);*/</script></con:config></con:testStep><con:testStep type="restrequest" name="GetSession" id="2b33e070-a220-4774-b7d1-5a893fbcf71f"><con:settings/><con:config service="First Attempt" methodName="Start" resourcePath="/platform/rest/v37/session/start{Version}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="GetSession" id="2875fb9c-3257-4dcf-b56a-59e72b87fd75" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  &lt;con:entry key="CAMP-SESSION" value="${CampID}"/>
+  &lt;con:entry key="Cookie" value="${SessionID}"/>
+  &lt;con:entry key="Version" value="${Version}"/>
+&lt;/xml-fragment></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://eclipselab1.vf.rogers.com</con:endpoint><con:request>{"additionalParameters":{"deviceType":"PC_Apple"}}</con:request><con:originalUri>http://eclipselab1.vf.rogers.com/platform/rest/v37/session/start</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="2fd205ae-4ec3-4766-b1f4-8287a0c246cf" name="Valid HTTP Status Codes"><con:settings/><con:configuration><codes>200</codes></con:configuration></con:assertion><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:parameters>
+  <con:entry key="Origin" value="http://eclipselab1.vf.rogers.com"/>
+  <con:entry key="Cookie" value="${SessionID}"/>
+  <con:entry key="X-W3-DEVICE-ID" value="aa915bff9a6751d1d2a4aef91d5aa35a255ab261"/>
+  <con:entry key="Accept" value="*/*"/>
+  <con:entry key="User-Agent" value="Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.132 Safari/537.36"/>
+  <con:entry key="Connection" value="keep-alive"/>
+  <con:entry key="Referer" value="http://eclipselab1.vf.rogers.com/eclipseDigiflare/dev/index.html"/>
+  <con:entry key="Host" value="eclipselab1.vf.rogers.com"/>
+  <con:entry key="Accept-Encoding" value="gzip, deflate"/>
+  <con:entry key="CAMP-SESSION" value="${CampID}"/>
+  <con:entry key="X-DEBUG-HHID" value="THS3_HHID4_RegionA"/>
+  <con:entry key="Accept-Language" value="en-US,en;q=0.8,pl;q=0.6"/>
+  <con:entry key="X-Claimed-SubscriberId" value="THS3_HHID4_RegionA"/>
+  <con:entry key="Content-Type" value="application/json; "/>
+</con:parameters><con:parameterOrder><con:entry>Origin</con:entry><con:entry>Host</con:entry><con:entry>Accept-Language</con:entry><con:entry>Accept-Encoding</con:entry><con:entry>X-W3-DEVICE-ID</con:entry><con:entry>X-Claimed-SubscriberId</con:entry><con:entry>Accept</con:entry><con:entry>User-Agent</con:entry><con:entry>X-DEBUG-HHID</con:entry><con:entry>Connection</con:entry><con:entry>Referer</con:entry><con:entry>CAMP-SESSION</con:entry><con:entry>Content-Type</con:entry><con:entry>Cookie</con:entry><con:entry/></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="groovy" name="JS Session Grab" id="f932d1b3-19f3-41d3-978a-e05131be6c6f"><con:settings/><con:config><script>function searchinput(re, str) {
+  if (str.search(re) != -1) { var x = str.split(re);  
+    log.info(re + " " + x[1]); //log.info (x[1]);
+  } 
+}
+
+var response = testRunner.getTestCase().getTestStepByName("GetSession").httpRequest.response.responseHeaders;
+var n = response.toString();
+var m = n.split(";");
+
+for (i=0;i&lt;m.length;i++) {
+   searchinput ("JSESSIONID=", m[i]);
+   searchinput ("mint-sso-token=", m[i]);
+}
+
+</script></con:config></con:testStep><con:testStep type="groovy" name="JS Session PUT" id="a2868132-e63e-43b6-a571-411d611b2c2e"><con:settings/><con:config><script>var response = testRunner.getTestCase().getTestStepByName("GetSession").httpRequest.response.responseHeaders;
+var fullstring = response.toString(); // change header to string
+var splitheaderby = ";";
+function searchinput(full, part) {
+  var m = full.split(splitheaderby); // m becomes an array of separated strings from session headers
+  for (i=0;i&lt;m.length;i++)  
+  {
+      if (m[i].search(part) != -1) { 
+      var x = m[i].split(part); //separate by injected keywords
+      return part + x[1]; // return keyword + string
+      } 
+  }
+}
+var jsessionid = searchinput(fullstring, "JSESSIONID=");  // search string for JSESSION
+var mintid = searchinput(fullstring, "mint-sso-token=");  // search string for mint
+var expiry = searchinput(fullstring, "Expires");  // search string for expiry Expires=Wed, 26-Aug-2015 18:04:44 GMT
+var combined = jsessionid +";"+ mintid + ";" + expiry;
+//log.info(jsessionid +";"+ mintid); //context.setProperty("SessionID1", jsessionid);  //context.setProperty("SessionID2", mintid);
+log.info(combined);
+context.setProperty("SessionID", combined);</script></con:config></con:testStep><con:testStep type="restrequest" name="Get Channel Lineup" id="b8f61f4c-f8d2-414b-a1d4-b66a7701324d" disabled="true"><con:settings/><con:config service="First Attempt" methodName="Channels" resourcePath="/videos/{Version}/channels" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Get Channel Lineup" id="4777f1ec-2557-45d5-ac57-bebbe5d84062" mediaType="application/x-www-form-urlencoded"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  &lt;con:entry key="CAMP-SESSION" value="${CampID}"/>
+  &lt;con:entry key="Cookie" value="${SessionID}"/>
+&lt;/xml-fragment></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://eclipselab1.vf.rogers.com</con:endpoint><con:request/><con:originalUri>http://eclipselab1.vf.rogers.com/videos/rest/v35/channels</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="8af3942a-4a99-4f22-b516-123c944f65f0" name="Valid HTTP Status Codes"><con:settings/><con:configuration><codes>200</codes></con:configuration></con:assertion><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:parameters>
+  <con:entry key="Cookie" value="${Cookie}"/>
+  <con:entry key="Origin" value="http://eclipselab1.vf.rogers.com"/>
+  <con:entry key="X-W3-DEVICE-ID" value="aa915bff9a6751d1d2a4aef91d5aa35a255ab261"/>
+  <con:entry key="Accept" value="*/*"/>
+  <con:entry key="ratingd" value="7"/>
+  <con:entry key="User-Agent" value="Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.132 Safari/537.36"/>
+  <con:entry key="Connection" value="keep-alive"/>
+  <con:entry key="Referer" value="http://eclipselab1.vf.rogers.com/eclipseDigiflare/dev/index.html"/>
+  <con:entry key="Host" value="eclipselab1.vf.rogers.com"/>
+  <con:entry key="Accept-Encoding" value="gzip, deflate"/>
+  <con:entry key="CAMP-SESSION" value="${CampID}"/>
+  <con:entry key="X-DEBUG-HHID" value="THS3_HHID4_RegionA"/>
+  <con:entry key="Accept-Language" value="en-US,en;q=0.8,pl;q=0.6"/>
+  <con:entry key="X-Claimed-SubscriberId" value="THS3_HHID4_RegionA"/>
+  <con:entry key="Content-Type" value="application/json; charset=UTF-8"/>
+</con:parameters><con:parameterOrder><con:entry>ratingd</con:entry><con:entry>Origin</con:entry><con:entry>Host</con:entry><con:entry>Accept-Language</con:entry><con:entry>Accept-Encoding</con:entry><con:entry>X-W3-DEVICE-ID</con:entry><con:entry>X-Claimed-SubscriberId</con:entry><con:entry>Accept</con:entry><con:entry>User-Agent</con:entry><con:entry>X-DEBUG-HHID</con:entry><con:entry>Connection</con:entry><con:entry>Referer</con:entry><con:entry>CAMP-SESSION</con:entry><con:entry>Cookie</con:entry><con:entry>Content-Type</con:entry><con:entry>ratingid</con:entry><con:entry>format</con:entry><con:entry>Version</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="Get EPG by Date" id="926398d1-89a5-4808-b97a-585673a8042d" disabled="true"><con:settings/><con:config service="First Attempt" resourcePath="/videos/rest/v35/epg/2015-08-17T16:32:37Z/2015-08-17T19:32:37Z" methodName="Method 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Get EPG by Date" id="76ab7c17-7292-4d72-a47c-da917afc5deb" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  &lt;con:entry key="CAMP-SESSION" value="${CampID}"/>
+  &lt;con:entry key="Cookie" value="${SessionID}"/>
+  &lt;con:entry key="Content-Type" value="application/json; charset=utf-8"/>
+&lt;/xml-fragment></con:setting></con:settings><con:endpoint>http://eclipselab1.vf.rogers.com</con:endpoint><con:request/><con:originalUri>http://eclipselab1.vf.rogers.com/videos/rest/v35/channels</con:originalUri><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:parameters>
+  <con:entry key="CAMP-SESSION" value="${CampID}"/>
+  <con:entry key="Cookie" value="${SessionID}"/>
+  <con:entry key="X-DEBUG-HHID" value="THS3_HHID4_RegionA"/>
+  <con:entry key="X-W3-DEVICE-ID" value="aa915bff9a6751d1d2a4aef91d5aa35a255ab261"/>
+</con:parameters><con:parameterOrder><con:entry>ratingd</con:entry><con:entry>Host</con:entry><con:entry>Accept-Language</con:entry><con:entry>Accept-Encoding</con:entry><con:entry>X-W3-DEVICE-ID</con:entry><con:entry>X-Claimed-SubscriberId</con:entry><con:entry>Accept</con:entry><con:entry>User-Agent</con:entry><con:entry>X-DEBUG-HHID</con:entry><con:entry>Connection</con:entry><con:entry>Referer</con:entry><con:entry>CAMP-SESSION</con:entry><con:entry>Cookie</con:entry><con:entry>Content-Type</con:entry><con:entry>Origin</con:entry><con:entry>ratingid</con:entry><con:entry>format</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="REST Request" id="f932a134-1d39-46f6-b6c0-5d5ff96b9444" disabled="true"><con:settings/><con:config service="First Attempt" methodName="Start" resourcePath="/platform/rest/v37/session/start{Version}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="REST Request" id="9c2db9e4-a081-4073-bb39-03ae52eb78ab" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://eclipselab1.vf.rogers.com</con:endpoint><con:request/><con:originalUri>http://eclipselab1.vf.rogers.com/platform/rest/v37/session/start</con:originalUri><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:parameters><entry key="CAMP-SESSION" value="${#Project#CampID}" xmlns="http://eviware.com/soapui/config"/></con:parameters><con:parameterOrder><con:entry>Origin</con:entry><con:entry>Host</con:entry><con:entry>Accept-Language</con:entry><con:entry>Accept-Encoding</con:entry><con:entry>X-W3-DEVICE-ID</con:entry><con:entry>X-Claimed-SubscriberId</con:entry><con:entry>Accept</con:entry><con:entry>User-Agent</con:entry><con:entry>X-DEBUG-HHID</con:entry><con:entry>Connection</con:entry><con:entry>Referer</con:entry><con:entry>CAMP-SESSION</con:entry><con:entry>Content-Type</con:entry><con:entry>Cookie</con:entry><con:entry/></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="groovy" name="Javascript Test" id="b5347ed6-a197-4a7f-be1f-abf95ed2c3ac" disabled="true"><con:settings/><con:config><script>var response = testRunner.getTestCase().getTestStepByName("GetSession").httpRequest.response.responseHeaders;
+var header = response.toString();
+log.info(header);
+
+var t = testRunner.getTestCase().getTestSuite().getProject().setPropertyValue("test", "testVal" );
+//var project = com.eviware.soapui.model.support.ModelSupport.getModelItemProject( request ); 
+//project.setPropertyValue("test", "testVal" ); 
+log.info(testRunner.getTestCase().getTestSuite().getProject().getPropertyValue("test"));</script></con:config></con:testStep><con:properties/><con:reportParameters/><con:breakPoints><con:testStepId>f932a134-1d39-46f6-b6c0-5d5ff96b9444</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>b5347ed6-a197-4a7f-be1f-abf95ed2c3ac</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>2b33e070-a220-4774-b7d1-5a893fbcf71f</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>f932d1b3-19f3-41d3-978a-e05131be6c6f</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>a2868132-e63e-43b6-a571-411d611b2c2e</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>b8f61f4c-f8d2-414b-a1d4-b66a7701324d</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>926398d1-89a5-4808-b97a-585673a8042d</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>dbfc47b8-0c1d-4b54-947f-3fec2c977d18</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints><con:breakPoints><con:testStepId>8879056f-5d83-4738-8f3b-51c35749bcf2</con:testStepId><con:status>NONE</con:status><con:properties/></con:breakPoints></con:testCase></con:testSuite>
